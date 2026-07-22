@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Xavier — Веб-разработка премиум-класса</title>
+<meta name="description" content="Разработка сайтов, интернет-магазинов и веб-сервисов под ключ. Современный дизайн, чистый код, запуск в срок.">
+
+<!-- Tailwind CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          display: ['"Space Grotesk"', 'sans-serif'],
+          body: ['"Inter"', 'sans-serif'],
+          mono: ['"JetBrains Mono"', 'monospace'],
+        },
+        colors: {
+          space: {
+            950: '#020308',
+            900: '#05070f',
+            800: '#0a0d1a',
+            700: '#111526',
+          },
+          nova: {
+            violet: '#3a5cc9',
+            blue: '#1d4ed8',
+            cyan: '#3fa9d6',
+            pink: '#4a6fc0',
+          }
+        },
+        boxShadow: {
+          'glow-violet': '0 0 34px -10px rgba(58, 92, 201, 0.4)',
+          'glow-cyan': '0 0 34px -10px rgba(63, 169, 214, 0.32)',
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    background-color: #020308;
+    overflow-x: hidden;
+  }
+  body {
+    font-family: 'Inter', sans-serif;
+  }
+
+  ::selection {
+    background: rgba(139, 92, 246, 0.4);
+    color: #fff;
+  }
+
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: #050611; }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #8b5cf6, #22d3ee);
+    border-radius: 10px;
+  }
+
+  #star-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .nebula {
+    position: fixed;
+    border-radius: 9999px;
+    filter: blur(120px);
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.3;
+    will-change: transform;
+  }
+  .nebula-1 {
+    width: 46rem; height: 46rem;
+    background: radial-gradient(circle at 30% 30%, #1e3a8a, transparent 70%);
+    top: -14rem; left: -10rem;
+    animation: drift1 22s ease-in-out infinite alternate;
+  }
+  .nebula-2 {
+    width: 40rem; height: 40rem;
+    background: radial-gradient(circle at 60% 40%, #0c4a6e, transparent 70%);
+    bottom: -16rem; right: -12rem;
+    animation: drift2 26s ease-in-out infinite alternate;
+  }
+  .nebula-3 {
+    width: 30rem; height: 30rem;
+    background: radial-gradient(circle at 50% 50%, #1e2a55, transparent 70%);
+    top: 40%; left: 50%;
+    opacity: 0.16;
+    animation: drift3 30s ease-in-out infinite alternate;
+  }
+  @keyframes drift1 { from { transform: translate(0,0) scale(1);} to { transform: translate(6rem, 4rem) scale(1.15);} }
+  @keyframes drift2 { from { transform: translate(0,0) scale(1);} to { transform: translate(-5rem, -6rem) scale(1.1);} }
+  @keyframes drift3 { from { transform: translate(-50%,-50%) scale(0.9);} to { transform: translate(-45%,-55%) scale(1.2);} }
+
+  .content-layer { position: relative; z-index: 10; }
+
+  .glass {
+    background: linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.015));
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .glass-strong {
+    background: rgba(10, 12, 26, 0.65);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255,255,255,0.09);
+  }
+
+  .grad-text {
+    background: linear-gradient(90deg, #6d8ee8 0%, #3b6fd6 45%, #3fa9d6 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .card-border-glow {
+    position: relative;
+    isolation: isolate;
+  }
+  .card-border-glow::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(58,92,201,0.45), rgba(63,169,214,0.08) 40%, rgba(58,92,201,0) 70%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity .4s ease;
+    z-index: -1;
+  }
+  .card-border-glow:hover::before { opacity: 1; }
+
+  .btn-primary {
+    background: linear-gradient(90deg, #1e3a8a, #1d4ed8);
+    box-shadow: 0 0 0 rgba(58,92,201,0);
+    transition: box-shadow .35s ease, transform .25s ease, filter .3s ease;
+  }
+  .btn-primary:hover {
+    box-shadow: 0 0 36px -8px rgba(29, 78, 216, 0.55);
+    transform: translateY(-2px);
+    filter: brightness(1.12);
+  }
+  .btn-primary:active { transform: translateY(0px) scale(0.98); }
+
+  .btn-ghost {
+    transition: all .3s ease;
+    border: 1px solid rgba(255,255,255,0.14);
+  }
+  .btn-ghost:hover {
+    border-color: rgba(63,169,214,0.5);
+    box-shadow: 0 0 24px -8px rgba(63,169,214,0.3);
+    transform: translateY(-2px);
+    background: rgba(255,255,255,0.03);
+  }
+
+  .hover-lift {
+    transition: transform .4s cubic-bezier(.2,.8,.2,1), box-shadow .4s ease, border-color .4s ease;
+  }
+  .hover-lift:hover {
+    transform: translateY(-6px);
+  }
+
+  .fade-up {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity .8s ease, transform .8s cubic-bezier(.2,.8,.2,1);
+  }
+  .fade-up.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .nav-link {
+    position: relative;
+  }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0; bottom: -4px;
+    width: 0%;
+    height: 1px;
+    background: linear-gradient(90deg, #a78bfa, #22d3ee);
+    transition: width .3s ease;
+  }
+  .nav-link:hover::after { width: 100%; }
+
+  .orbit-ring {
+    border-radius: 9999px;
+    border: 1px solid rgba(139,92,246,0.25);
+    position: absolute;
+  }
+  .spin-slow { animation: spin 40s linear infinite; }
+  .spin-slower { animation: spin 70s linear infinite reverse; }
+  .spin-slowest { animation: spin 100s linear infinite; }
+  @keyframes spin { from { transform: rotate(0deg);} to { transform: rotate(360deg);} }
+
+  @keyframes float-y {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-14px); }
+  }
+  .float { animation: float-y 6s ease-in-out infinite; }
+
+  .pulse-dot {
+    animation: pulse-dot 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  .price-highlight {
+    background: linear-gradient(135deg, rgba(29,78,216,0.14), rgba(63,169,214,0.06));
+  }
+
+  .mono-tag {
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.08em;
+  }
+
+  input::placeholder, textarea::placeholder { color: rgba(203,213,225,0.4); }
+  input, textarea {
+    transition: border-color .3s ease, box-shadow .3s ease, background .3s ease;
+  }
+  input:focus, textarea:focus {
+    outline: none;
+    border-color: rgba(139,92,246,0.7);
+    box-shadow: 0 0 0 4px rgba(139,92,246,0.12);
+  }
+
+  .thumb-grid {
+    background-image:
+      linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+  }
+</style>
+</head>
+
+<body class="bg-space-950 text-slate-200 font-body antialiased">
+
+<canvas id="star-canvas"></canvas>
+<div class="nebula nebula-1"></div>
+<div class="nebula nebula-2"></div>
+<div class="nebula nebula-3"></div>
+
+<div class="content-layer">
+
+  <!-- ============ HEADER ============ -->
+  <header id="top" class="fixed top-0 inset-x-0 z-50">
+    <div class="mx-auto max-w-7xl px-5 sm:px-8 mt-4">
+      <div class="glass-strong rounded-2xl px-5 sm:px-7 py-3.5 flex items-center justify-between shadow-lg shadow-black/40">
+        <a href="#top" class="flex items-center gap-2.5 group">
+          <span class="relative flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-nova-violet to-nova-cyan shadow-glow-violet">
+            <i data-lucide="orbit" class="w-5 h-5 text-white"></i>
+          </span>
+          <span class="font-display font-semibold text-lg tracking-tight text-white">Xavier<span class="grad-text">.dev</span></span>
+        </a>
+
+        <nav class="hidden lg:flex items-center gap-8 font-display text-sm text-slate-300">
+          <a href="#services" class="nav-link hover:text-white transition-colors">Услуги</a>
+          <a href="#process" class="nav-link hover:text-white transition-colors">Процесс</a>
+          <a href="#contact" class="nav-link hover:text-white transition-colors">Контакты</a>
+        </nav>
+
+        <a href="https://t.me/xavierweb" target="_blank" rel="noopener"
+           class="btn-primary hidden sm:flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-display font-medium text-white">
+          <i data-lucide="send" class="w-4 h-4"></i>
+          Заказать сайт
+        </a>
+
+        <button id="menu-btn" class="lg:hidden flex items-center justify-center w-10 h-10 rounded-lg border border-white/10 text-white">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- mobile menu -->
+      <div id="mobile-menu" class="hidden lg:hidden mt-2 glass-strong rounded-2xl px-6 py-5 flex flex-col gap-4 font-display text-slate-200">
+        <a href="#services" class="mobile-link py-1">Услуги</a>
+        <a href="#process" class="mobile-link py-1">Процесс</a>
+        <a href="#contact" class="mobile-link py-1">Контакты</a>
+        <a href="https://t.me/xavierweb" target="_blank" rel="noopener" class="btn-primary text-center rounded-xl px-5 py-3 text-sm font-medium text-white mt-1">Заказать сайт</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ HERO ============ -->
+  <section class="relative pt-32 pb-16 sm:pt-48 sm:pb-32 px-5 sm:px-8">
+    <div class="mx-auto max-w-7xl grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+
+      <div class="fade-up">
+        <div class="inline-flex items-center gap-2 rounded-full glass px-4 py-1.5 text-xs mono-tag text-cyan-300/90 mb-7">
+          <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 pulse-dot"></span>
+          ДОСТУПЕН ДЛЯ НОВЫХ ПРОЕКТОВ
+        </div>
+
+        <h1 class="font-display font-semibold text-4xl sm:text-5xl xl:text-6xl leading-[1.08] tracking-tight text-white">
+          Сайты, которые выводят
+          <span class="grad-text">ваш бизнес на орбиту</span>
+        </h1>
+
+        <p class="mt-6 text-lg text-slate-400 max-w-xl leading-relaxed">
+          Проектирую и разрабатываю сайты, интернет-магазины и веб-сервисы под ключ — от идеи и брифа до запуска и роста метрик. Чистый код, продуманный UX и дизайн, который не спутать с шаблоном.
+        </p>
+
+        <div class="mt-9 flex flex-col sm:flex-row gap-4">
+          <a href="#contact" class="btn-primary rounded-xl px-7 py-4 text-center font-display font-medium text-white flex items-center justify-center gap-2">
+            <i data-lucide="rocket" class="w-4 h-4"></i>
+            Заказать сайт
+          </a>
+        </div>
+      </div>
+
+      <!-- Hero visual: orbit system -->
+      <div class="fade-up relative h-[320px] sm:h-[500px] flex items-center justify-center overflow-hidden">
+        <div class="orbit-ring spin-slow w-[200px] h-[200px] sm:w-[360px] sm:h-[360px]"></div>
+        <div class="orbit-ring spin-slower w-[260px] h-[260px] sm:w-[470px] sm:h-[470px] border-blue-400/15"></div>
+        <div class="orbit-ring spin-slowest w-[320px] h-[320px] sm:w-[580px] sm:h-[580px] border-cyan-300/10"></div>
+
+        <!-- center core -->
+        <div class="relative w-20 h-20 sm:w-32 sm:h-32 rounded-full bg-gradient-to-br from-nova-violet via-blue-500 to-nova-cyan shadow-glow-violet flex items-center justify-center float">
+          <i data-lucide="code-2" class="w-8 h-8 sm:w-12 sm:h-12 text-white"></i>
+        </div>
+
+        <!-- orbiting nodes -->
+        <div class="absolute top-6 left-1/2 -translate-x-1/2 spin-slow" style="animation-duration:18s;">
+          <div class="glass rounded-xl px-3 py-2 flex items-center gap-2 -translate-x-24 sm:-translate-x-32">
+            <i data-lucide="palette" class="w-4 h-4 text-nova-pink"></i>
+            <span class="text-xs font-display text-white">UI/UX</span>
+          </div>
+        </div>
+        <div class="absolute bottom-10 right-2 spin-slower" style="animation-duration:24s;">
+          <div class="glass rounded-xl px-3 py-2 flex items-center gap-2">
+            <i data-lucide="server" class="w-4 h-4 text-nova-cyan"></i>
+            <span class="text-xs font-display text-white">Backend</span>
+          </div>
+        </div>
+        <div class="absolute bottom-16 left-0 spin-slowest" style="animation-duration:30s;">
+          <div class="glass rounded-xl px-3 py-2 flex items-center gap-2">
+            <i data-lucide="smartphone" class="w-4 h-4 text-blue-400"></i>
+            <span class="text-xs font-display text-white">Адаптив</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ LOGOS / TRUST STRIP ============ -->
+  <section class="px-5 sm:px-8 pb-6">
+    <div class="mx-auto max-w-6xl fade-up">
+      <div class="glass rounded-2xl py-6 px-8 flex flex-wrap items-center justify-center gap-x-10 gap-y-4 text-slate-500 text-sm font-display">
+        <span class="flex items-center gap-2"><i data-lucide="shield-check" class="w-4 h-4"></i> Договор и гарантии</span>
+        <span class="flex items-center gap-2"><i data-lucide="gauge" class="w-4 h-4"></i> Скорость 90+ PageSpeed</span>
+        <span class="flex items-center gap-2"><i data-lucide="search" class="w-4 h-4"></i> SEO-база из коробки</span>
+        <span class="flex items-center gap-2"><i data-lucide="life-buoy" class="w-4 h-4"></i> Поддержка после запуска</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SERVICES / PRICING ============ -->
+  <section id="services" class="px-5 sm:px-8 py-20 sm:py-36">
+    <div class="mx-auto max-w-7xl">
+      <div class="fade-up text-center max-w-2xl mx-auto mb-16">
+        <span class="mono-tag text-xs text-nova-cyan/80">// УСЛУГИ И ЦЕНЫ</span>
+        <h2 class="font-display font-semibold text-3xl sm:text-4xl text-white mt-4">Тарифы под задачу любого масштаба</h2>
+        <p class="text-slate-400 mt-4">Прозрачная стоимость без скрытых доплат. Ниже среднерыночной — без потери в качестве.</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6 lg:gap-8">
+
+        <!-- Tariff 1 -->
+        <div class="fade-up card-border-glow hover-lift glass rounded-3xl p-8 flex flex-col">
+          <i data-lucide="file-text" class="w-8 h-8 text-nova-cyan mb-6"></i>
+          <h3 class="font-display font-semibold text-xl text-white">Сайт-визитка / Лендинг</h3>
+          <p class="text-slate-400 text-sm mt-2">Для презентации услуг, продукта или личного бренда</p>
+          <div class="mt-6 flex items-baseline gap-2">
+            <span class="font-display font-semibold text-2xl sm:text-3xl text-white">10 000 – 15 000 ₽</span>
+          </div>
+          <div class="text-xs text-slate-500 mono-tag mt-1">СРОК: 7–12 ДНЕЙ</div>
+
+          <ul class="mt-7 space-y-3 text-sm text-slate-300 flex-1">
+            <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-nova-violet shrink-0 mt-0.5"></i>Уникальный UI-дизайн под бренд</li>
+            <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-nova-violet shrink-0 mt-0.5"></i>Адаптив под все устройства</li>
+            <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-nova-violet shrink-0 mt-0.5"></i>До 5 экранов / разделов</li>
+            <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-nova-violet shrink-0 mt-0.5"></i>Форма заявки и аналитика</li>
+            <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-nova-violet shrink-0 mt-0.5"></i>Базовая SEO-разметка</li>
+          </ul>
+
+          <a href="https://t.me/xavierweb?text=Здравствуйте!%20Хочу%20заказать%20сайт-визитку%2Fлендинг" target="_blank" rel="noopener"
+             class="btn-ghost mt-8 rounded-xl py-3 text-center font-display font-medium text-white flex items-center justify-center gap-2">
+            Заказать <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </a>
+        </div>
+
+        <!-- Tariff 2 (highlighted) -->
+        <div class="fade-up card-border-glow hover-lift price-highlight rounded-3xl p-8 flex flex-col border border-nova-violet/40 relative shadow-glow-violet md:-translate-y-3">
+          <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-nova-violet to-nova-cyan text-white text-xs font-display font-medium px-4 py-1 rounded-full mono-tag">
+            ПОПУЛЯРНЫЙ ВЫБОР
+          </div>
+          <i data-lucide="shopping-cart" class="w-8 h-8 text-nova-cyan mb-6"></i>
+          <h3 class="font-display font-semibold text-xl text-white">Интернет-магазин</h3>
+          <p class="text-slate-400 text-sm mt-2">Каталог, корзина, оплата и управление заказами</p>
+          <div class="mt-6 flex items-baseline gap-2">
+            <span class="font-display font-semibold text-2xl sm:text-3xl text-white">25 000 – 40 000 ₽</span>
+          </div>
+          <div class="text-xs text-slate-500 mono-tag mt-1">СРОК: 2–3 НЕДЕЛИ</div>
+
+          <ul class="mt-7 space-y-3 text-sm text-slate-300 flex-1">
+            <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-nova-cyan shrink-0 mt-0.5"></i>Каталог товаров и фильтры</li>
+            <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-nova-cyan shrink-0 mt-0.5"></i>Корзина и онлайн-оплата</li>
+            <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-nova-cyan shrink-0 mt-0.5"></i>Личный кабинет и админ-панель</li>
+            <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-nova-cyan shrink-0 mt-0.5"></i>Интеграция с CRM и доставкой</li>
+            <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-nova-cyan shrink-0 mt-0.5"></i>SEO-оптимизация и аналитика</li>
+          </ul>
+
+          <a href="https://t.me/xavierweb?text=Здравствуйте!%20Хочу%20заказать%20интернет-магазин" target="_blank" rel="noopener"
+             class="btn-primary mt-8 rounded-xl py-3 text-center font-display font-medium text-white flex items-center justify-center gap-2">
+            Заказать <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </a>
+        </div>
+
+        <!-- Tariff 3 -->
+        <div class="fade-up card-border-glow hover-lift glass rounded-3xl p-8 flex flex-col">
+          <i data-lucide="layers" class="w-8 h-8 text-nova-cyan mb-6"></i>
+          <h3 class="font-display font-semibold text-xl text-white">Сложный веб-сервис</h3>
+          <p class="text-slate-400 text-sm mt-2">SaaS, платформы, личные кабинеты, кастомная логика</p>
+          <div class="mt-6 flex items-baseline gap-2">
+            <span class="font-display font-semibold text-3xl text-white">от 80 000 ₽</span>
+          </div>
+          <div class="text-xs text-slate-500 mono-tag mt-1">СРОК: ОТ 6 НЕДЕЛЬ</div>
+
+          <ul class="mt-7 space-y-3 text-sm text-slate-300 flex-1">
+            <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-nova-violet shrink-0 mt-0.5"></i>Индивидуальная архитектура</li>
+            <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-nova-violet shrink-0 mt-0.5"></i>Своя логика и роли пользователей</li>
+            <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-nova-violet shrink-0 mt-0.5"></i>API и интеграции с сервисами</li>
+            <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-nova-violet shrink-0 mt-0.5"></i>Панель администратора</li>
+            <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-nova-violet shrink-0 mt-0.5"></i>Сопровождение после запуска</li>
+          </ul>
+
+          <a href="https://t.me/xavierweb?text=Здравствуйте!%20Хочу%20обсудить%20сложный%20веб-сервис" target="_blank" rel="noopener"
+             class="btn-ghost mt-8 rounded-xl py-3 text-center font-display font-medium text-white flex items-center justify-center gap-2">
+            Обсудить проект <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </a>
+        </div>
+
+      </div>
+
+      <p class="fade-up text-center text-xs text-slate-500 mt-8 mono-tag">* ИТОГОВАЯ СТОИМОСТЬ ЗАВИСИТ ОТ ОБЪЁМА ФУНКЦИЙ И ФИКСИРУЕТСЯ В ДОГОВОРЕ ДО СТАРТА РАБОТ</p>
+    </div>
+  </section>
+
+  <!-- ============ PROCESS ============ -->
+  <section id="process" class="px-5 sm:px-8 py-20 sm:py-36">
+    <div class="mx-auto max-w-6xl">
+      <div class="fade-up text-center max-w-2xl mx-auto mb-20">
+        <span class="mono-tag text-xs text-nova-cyan/80">// ЭТАПЫ РАБОТЫ</span>
+        <h2 class="font-display font-semibold text-3xl sm:text-4xl text-white mt-4">Путь от идеи до запуска</h2>
+        <p class="text-slate-400 mt-4">Прозрачный процесс на каждом этапе — вы всегда знаете, что происходит с проектом.</p>
+      </div>
+
+      <div class="relative">
+        <div class="hidden lg:block absolute top-8 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent"></div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-6">
+
+          <div class="fade-up relative">
+            <div class="flex lg:flex-col items-center lg:items-start gap-4">
+              <div class="shrink-0 w-16 h-16 rounded-2xl glass flex items-center justify-center font-display font-semibold text-xl text-nova-cyan relative z-10">01</div>
+              <div>
+                <h3 class="font-display font-semibold text-white mt-0 lg:mt-5">Бриф и идея</h3>
+                <p class="text-sm text-slate-400 mt-2">Обсуждаем цели, аудиторию и задачи бизнеса</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="fade-up relative">
+            <div class="flex lg:flex-col items-center lg:items-start gap-4">
+              <div class="shrink-0 w-16 h-16 rounded-2xl glass flex items-center justify-center font-display font-semibold text-xl text-nova-cyan relative z-10">02</div>
+              <div>
+                <h3 class="font-display font-semibold text-white mt-0 lg:mt-5">Прототип и дизайн</h3>
+                <p class="text-sm text-slate-400 mt-2">Собираю структуру и уникальный визуальный стиль</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="fade-up relative">
+            <div class="flex lg:flex-col items-center lg:items-start gap-4">
+              <div class="shrink-0 w-16 h-16 rounded-2xl glass flex items-center justify-center font-display font-semibold text-xl text-nova-cyan relative z-10">03</div>
+              <div>
+                <h3 class="font-display font-semibold text-white mt-0 lg:mt-5">Разработка</h3>
+                <p class="text-sm text-slate-400 mt-2">Пишу чистый код, верстаю и подключаю логику</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="fade-up relative">
+            <div class="flex lg:flex-col items-center lg:items-start gap-4">
+              <div class="shrink-0 w-16 h-16 rounded-2xl glass flex items-center justify-center font-display font-semibold text-xl text-nova-cyan relative z-10">04</div>
+              <div>
+                <h3 class="font-display font-semibold text-white mt-0 lg:mt-5">Тестирование</h3>
+                <p class="text-sm text-slate-400 mt-2">Проверяю скорость, адаптив и все сценарии</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="fade-up relative">
+            <div class="flex lg:flex-col items-center lg:items-start gap-4">
+              <div class="shrink-0 w-16 h-16 rounded-2xl bg-gradient-to-br from-nova-violet to-nova-cyan flex items-center justify-center font-display font-semibold text-xl text-white relative z-10 shadow-glow-violet">05</div>
+              <div>
+                <h3 class="font-display font-semibold text-white mt-0 lg:mt-5">Запуск и поддержка</h3>
+                <p class="text-sm text-slate-400 mt-2">Публикую проект и сопровождаю после релиза</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section id="contact" class="px-5 sm:px-8 py-20 sm:py-36">
+    <div class="mx-auto max-w-6xl">
+      <div class="fade-up text-center max-w-2xl mx-auto mb-16">
+        <span class="mono-tag text-xs text-nova-cyan/80">// КОНТАКТЫ</span>
+        <h2 class="font-display font-semibold text-3xl sm:text-4xl text-white mt-4">Готовы обсудить проект?</h2>
+        <p class="text-slate-400 mt-4">Напишите напрямую или оставьте заявку — отвечаю в течение суток.</p>
+      </div>
+
+      <div class="grid lg:grid-cols-5 gap-8">
+
+        <!-- Contact links -->
+        <div class="lg:col-span-2 flex flex-col gap-5">
+          <a href="https://t.me/xavierweb" target="_blank" rel="noopener"
+             class="fade-up hover-lift card-border-glow glass rounded-3xl p-7 flex items-center gap-5 group">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center shrink-0 shadow-glow-cyan">
+              <i data-lucide="send" class="w-6 h-6 text-white"></i>
+            </div>
+            <div class="flex-1">
+              <div class="text-xs mono-tag text-slate-500">TELEGRAM</div>
+              <div class="font-display font-semibold text-white text-lg">@xavierweb</div>
+            </div>
+            <i data-lucide="arrow-up-right" class="w-5 h-5 text-slate-500 group-hover:text-nova-cyan group-hover:translate-x-1 group-hover:-translate-y-1 transition-all"></i>
+          </a>
+
+          <a href="https://x.com/Xavier_Cross" target="_blank" rel="noopener"
+             class="fade-up hover-lift card-border-glow glass rounded-3xl p-7 flex items-center gap-5 group">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500 to-fuchsia-400 flex items-center justify-center shrink-0 shadow-glow-violet">
+              <i data-lucide="twitter" class="w-6 h-6 text-white"></i>
+            </div>
+            <div class="flex-1">
+              <div class="text-xs mono-tag text-slate-500">X (TWITTER)</div>
+              <div class="font-display font-semibold text-white text-lg">@Xavier_Cross</div>
+            </div>
+            <i data-lucide="arrow-up-right" class="w-5 h-5 text-slate-500 group-hover:text-nova-cyan group-hover:translate-x-1 group-hover:-translate-y-1 transition-all"></i>
+          </a>
+
+          <div class="fade-up glass rounded-3xl p-7">
+            <div class="flex items-center gap-2 text-sm text-slate-300">
+              <i data-lucide="clock" class="w-4 h-4 text-nova-cyan"></i>
+              Отвечаю ежедневно с 10:00 до 22:00 (МСК)
+            </div>
+            <div class="flex items-center gap-2 text-sm text-slate-300 mt-3">
+              <i data-lucide="map-pin" class="w-4 h-4 text-nova-cyan"></i>
+              Удалённо — работаю с клиентами по всему миру
+            </div>
+          </div>
+        </div>
+
+        <!-- Form -->
+        <form id="contact-form" class="lg:col-span-3 fade-up glass-strong rounded-3xl p-8 sm:p-10">
+          <h3 class="font-display font-semibold text-xl text-white mb-6">Оставить заявку</h3>
+
+          <div class="grid sm:grid-cols-2 gap-5">
+            <div>
+              <label class="text-xs mono-tag text-slate-500">ИМЯ</label>
+              <input required type="text" placeholder="Как к вам обращаться" class="w-full mt-2 bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 text-sm text-white">
+            </div>
+            <div>
+              <label class="text-xs mono-tag text-slate-500">КОНТАКТ ДЛЯ СВЯЗИ</label>
+              <input required type="text" placeholder="Telegram, email или телефон" class="w-full mt-2 bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 text-sm text-white">
+            </div>
+          </div>
+
+          <div class="mt-5">
+            <label class="text-xs mono-tag text-slate-500">ТИП ПРОЕКТА</label>
+            <select class="w-full mt-2 bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 text-sm text-white appearance-none">
+              <option class="bg-space-900">Сайт-визитка / Лендинг</option>
+              <option class="bg-space-900">Интернет-магазин</option>
+              <option class="bg-space-900">Сложный веб-сервис</option>
+              <option class="bg-space-900">Пока не определился</option>
+            </select>
+          </div>
+
+          <div class="mt-5">
+            <label class="text-xs mono-tag text-slate-500">О ПРОЕКТЕ</label>
+            <textarea rows="4" placeholder="Кратко опишите задачу и сроки" class="w-full mt-2 bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 text-sm text-white resize-none"></textarea>
+          </div>
+
+          <button type="submit" class="btn-primary w-full mt-7 rounded-xl py-4 font-display font-medium text-white flex items-center justify-center gap-2">
+            <i data-lucide="send" class="w-4 h-4"></i>
+            Отправить в Telegram
+          </button>
+          <p class="text-xs text-slate-500 mt-4 text-center">При отправке вы будете перенаправлены в Telegram для завершения заявки</p>
+        </form>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="px-5 sm:px-8 py-10 border-t border-white/[0.06]">
+    <div class="mx-auto max-w-7xl flex flex-col sm:flex-row items-center justify-between gap-5">
+      <div class="flex items-center gap-2.5">
+        <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-nova-violet to-nova-cyan">
+          <i data-lucide="orbit" class="w-4 h-4 text-white"></i>
+        </span>
+        <span class="font-display font-semibold text-white">Xavier<span class="grad-text">.dev</span></span>
+      </div>
+      <p class="text-sm text-slate-500 text-center">© 2026 Xavier. Разработка сайтов и веб-сервисов.</p>
+      <div class="flex items-center gap-4">
+        <a href="https://t.me/xavierweb" target="_blank" rel="noopener" class="w-9 h-9 rounded-lg glass flex items-center justify-center text-slate-400 hover:text-nova-cyan transition-colors">
+          <i data-lucide="send" class="w-4 h-4"></i>
+        </a>
+        <a href="https://x.com/Xavier_Cross" target="_blank" rel="noopener" class="w-9 h-9 rounded-lg glass flex items-center justify-center text-slate-400 hover:text-nova-cyan transition-colors">
+          <i data-lucide="twitter" class="w-4 h-4"></i>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  // Каждый блок обёрнут в try/catch: если один блок (например, иконки из
+  // заблокированного CDN) упадёт с ошибкой, остальной интерфейс всё равно
+  // будет работать — это особенно важно во встроенных браузерах вроде
+  // TikTok/Instagram, которые иногда блокируют внешние скрипты.
+
+  function safeCreateIcons() {
+    try {
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    } catch (err) {
+      console.warn('Lucide icons unavailable:', err);
+    }
+  }
+  safeCreateIcons();
+
+  // Mobile menu toggle
+  try {
+    const menuBtn = document.getElementById('menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    menuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+      const icon = menuBtn.querySelector('i');
+      icon.setAttribute('data-lucide', mobileMenu.classList.contains('hidden') ? 'menu' : 'x');
+      safeCreateIcons();
+    });
+    document.querySelectorAll('.mobile-link').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+        menuBtn.querySelector('i').setAttribute('data-lucide', 'menu');
+        safeCreateIcons();
+      });
+    });
+  } catch (err) {
+    console.warn('Mobile menu init failed:', err);
+  }
+
+  // Fade-up on scroll
+  try {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+  } catch (err) {
+    console.warn('Scroll animation init failed:', err);
+    // На случай сбоя показываем весь контент сразу, чтобы страница не осталась пустой
+    document.querySelectorAll('.fade-up').forEach(el => el.classList.add('in-view'));
+  }
+
+  // Contact form -> redirect to Telegram with prefilled message
+  try {
+    const form = document.getElementById('contact-form');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const inputs = form.querySelectorAll('input, select, textarea');
+      const name = inputs[0].value.trim();
+      const contact = inputs[1].value.trim();
+      const type = inputs[2].value;
+      const details = inputs[3].value.trim();
+      const message = `Здравствуйте! Меня зовут ${name || '—'}.%0AКонтакт: ${contact || '—'}.%0AТип проекта: ${type}.%0AДетали: ${details || '—'}`;
+      window.open(`https://t.me/xavierweb?text=${message}`, '_blank');
+    });
+  } catch (err) {
+    console.warn('Contact form init failed:', err);
+  }
+
+  // ===== Starfield canvas =====
+  try {
+  const canvas = document.getElementById('star-canvas');
+  const ctx = canvas.getContext('2d');
+  let stars = [];
+  let w, h;
+  let mouseX = 0, mouseY = 0;
+
+  function resize() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+    initStars();
+  }
+
+  function initStars() {
+    const count = Math.floor((w * h) / 8000);
+    stars = Array.from({ length: count }, () => ({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      r: Math.random() * 1.3 + 0.2,
+      baseAlpha: Math.random() * 0.6 + 0.2,
+      twinkleSpeed: Math.random() * 0.02 + 0.005,
+      twinklePhase: Math.random() * Math.PI * 2,
+      parallax: Math.random() * 0.4 + 0.05,
+      hue: Math.random() > 0.85 ? (Math.random() > 0.5 ? 'cyan' : 'violet') : 'white'
+    }));
+  }
+
+  function draw(t) {
+    ctx.clearRect(0, 0, w, h);
+    for (const s of stars) {
+      const twinkle = Math.sin(t * s.twinkleSpeed + s.twinklePhase) * 0.35 + 0.65;
+      const alpha = s.baseAlpha * twinkle;
+      const offsetX = (mouseX - w / 2) * s.parallax * 0.02;
+      const offsetY = (mouseY - h / 2) * s.parallax * 0.02;
+
+      let color = '226,232,244';
+      if (s.hue === 'cyan') color = '125,178,214';
+      if (s.hue === 'violet') color = '110,140,220';
+
+      ctx.beginPath();
+      ctx.arc(s.x + offsetX, s.y + offsetY, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${color}, ${alpha})`;
+      ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', resize);
+  window.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  });
+
+  resize();
+  requestAnimationFrame(draw);
+  } catch (err) {
+    console.warn('Starfield init failed:', err);
+  }
+</script>
+
+</body>
+</html>
