@@ -241,6 +241,29 @@
     letter-spacing: 0.08em;
   }
 
+  .contact-toggle {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(203,213,225,0.55);
+    transition: all .25s ease;
+    background: rgba(255,255,255,0.02);
+  }
+  .contact-toggle:hover {
+    border-color: rgba(63,169,214,0.5);
+    color: #fff;
+  }
+  .contact-toggle.active-toggle {
+    background: linear-gradient(90deg, #1e3a8a, #1d4ed8);
+    border-color: transparent;
+    color: #fff;
+    box-shadow: 0 0 20px -6px rgba(29, 78, 216, 0.6);
+  }
+
   input::placeholder, textarea::placeholder { color: rgba(203,213,225,0.4); }
   input, textarea {
     transition: border-color .3s ease, box-shadow .3s ease, background .3s ease;
@@ -402,7 +425,7 @@
           <h3 class="font-display font-semibold text-xl text-white">Сайт-визитка / Лендинг</h3>
           <p class="text-slate-400 text-sm mt-2">Для презентации услуг, продукта или личного бренда</p>
           <div class="mt-6 flex items-baseline gap-2">
-            <span class="font-display font-semibold text-2xl sm:text-3xl text-white">10 000 – 15 000 ₽</span>
+            <span class="font-display font-semibold text-2xl sm:text-3xl text-white">от 10 000 до 25 000 ₽</span>
           </div>
           <div class="text-xs text-slate-500 mono-tag mt-1">СРОК: 7–12 ДНЕЙ</div>
 
@@ -414,10 +437,19 @@
             <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-nova-violet shrink-0 mt-0.5"></i>Базовая SEO-разметка</li>
           </ul>
 
-          <a href="https://t.me/xavierweb?text=Здравствуйте!%20Хочу%20заказать%20сайт-визитку%2Fлендинг" target="_blank" rel="noopener"
-             class="btn-ghost mt-8 rounded-xl py-3 text-center font-display font-medium text-white flex items-center justify-center gap-2">
-            Заказать <i data-lucide="arrow-right" class="w-4 h-4"></i>
-          </a>
+          <div class="mt-8">
+            <div class="order-toggle-group flex flex-wrap items-center gap-2 mb-3" data-order-id="visitka">
+              <button type="button" class="contact-toggle" data-platform="telegram" title="Telegram"><i data-lucide="send" class="w-4 h-4"></i></button>
+              <button type="button" class="contact-toggle" data-platform="x" title="X (Twitter)"><i data-lucide="twitter" class="w-4 h-4"></i></button>
+              <button type="button" class="contact-toggle" data-platform="discord" title="Discord">
+                <svg viewBox="0 0 24 24" class="w-4 h-4" fill="currentColor"><path d="M20.317 4.369A19.79 19.79 0 0 0 16.558 3c-.2.36-.42.84-.573 1.22a18.27 18.27 0 0 0-5.97 0A12.6 12.6 0 0 0 9.442 3a19.73 19.73 0 0 0-3.76 1.37C2.9 8.15 2.14 11.84 2.42 15.47a19.9 19.9 0 0 0 6.06 3.06c.49-.67.92-1.39 1.29-2.14-.71-.27-1.38-.6-2.02-1 .17-.13.33-.26.49-.4a14.2 14.2 0 0 0 12.09 0c.16.14.32.27.49.4-.64.4-1.31.73-2.02 1 .37.75.8 1.47 1.29 2.14a19.86 19.86 0 0 0 6.06-3.06c.34-4.2-.62-7.86-2.79-11.1zM9.5 13.3c-.85 0-1.55-.79-1.55-1.76 0-.97.68-1.76 1.55-1.76.87 0 1.57.8 1.55 1.76 0 .97-.68 1.76-1.55 1.76zm5 0c-.85 0-1.55-.79-1.55-1.76 0-.97.68-1.76 1.55-1.76.87 0 1.57.8 1.55 1.76 0 .97-.68 1.76-1.55 1.76z"/></svg>
+              </button>
+            </div>
+            <a href="#" target="_blank" rel="noopener" data-order-id="visitka" data-label-default="Заказать"
+               class="order-btn btn-ghost rounded-xl py-3 text-center font-display font-medium text-white flex items-center justify-center gap-2">
+              <span class="order-btn-label">Заказать</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+          </div>
         </div>
 
         <!-- Tariff 2 (highlighted) -->
@@ -441,10 +473,19 @@
             <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-nova-cyan shrink-0 mt-0.5"></i>SEO-оптимизация и аналитика</li>
           </ul>
 
-          <a href="https://t.me/xavierweb?text=Здравствуйте!%20Хочу%20заказать%20интернет-магазин" target="_blank" rel="noopener"
-             class="btn-primary mt-8 rounded-xl py-3 text-center font-display font-medium text-white flex items-center justify-center gap-2">
-            Заказать <i data-lucide="arrow-right" class="w-4 h-4"></i>
-          </a>
+          <div class="mt-8">
+            <div class="order-toggle-group flex flex-wrap items-center gap-2 mb-3" data-order-id="shop">
+              <button type="button" class="contact-toggle" data-platform="telegram" title="Telegram"><i data-lucide="send" class="w-4 h-4"></i></button>
+              <button type="button" class="contact-toggle" data-platform="x" title="X (Twitter)"><i data-lucide="twitter" class="w-4 h-4"></i></button>
+              <button type="button" class="contact-toggle" data-platform="discord" title="Discord">
+                <svg viewBox="0 0 24 24" class="w-4 h-4" fill="currentColor"><path d="M20.317 4.369A19.79 19.79 0 0 0 16.558 3c-.2.36-.42.84-.573 1.22a18.27 18.27 0 0 0-5.97 0A12.6 12.6 0 0 0 9.442 3a19.73 19.73 0 0 0-3.76 1.37C2.9 8.15 2.14 11.84 2.42 15.47a19.9 19.9 0 0 0 6.06 3.06c.49-.67.92-1.39 1.29-2.14-.71-.27-1.38-.6-2.02-1 .17-.13.33-.26.49-.4a14.2 14.2 0 0 0 12.09 0c.16.14.32.27.49.4-.64.4-1.31.73-2.02 1 .37.75.8 1.47 1.29 2.14a19.86 19.86 0 0 0 6.06-3.06c.34-4.2-.62-7.86-2.79-11.1zM9.5 13.3c-.85 0-1.55-.79-1.55-1.76 0-.97.68-1.76 1.55-1.76.87 0 1.57.8 1.55 1.76 0 .97-.68 1.76-1.55 1.76zm5 0c-.85 0-1.55-.79-1.55-1.76 0-.97.68-1.76 1.55-1.76.87 0 1.57.8 1.55 1.76 0 .97-.68 1.76-1.55 1.76z"/></svg>
+              </button>
+            </div>
+            <a href="#" target="_blank" rel="noopener" data-order-id="shop" data-label-default="Заказать"
+               class="order-btn btn-primary rounded-xl py-3 text-center font-display font-medium text-white flex items-center justify-center gap-2">
+              <span class="order-btn-label">Заказать</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+          </div>
         </div>
 
         <!-- Tariff 3 -->
@@ -465,10 +506,19 @@
             <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-nova-violet shrink-0 mt-0.5"></i>Сопровождение после запуска</li>
           </ul>
 
-          <a href="https://t.me/xavierweb?text=Здравствуйте!%20Хочу%20обсудить%20сложный%20веб-сервис" target="_blank" rel="noopener"
-             class="btn-ghost mt-8 rounded-xl py-3 text-center font-display font-medium text-white flex items-center justify-center gap-2">
-            Обсудить проект <i data-lucide="arrow-right" class="w-4 h-4"></i>
-          </a>
+          <div class="mt-8">
+            <div class="order-toggle-group flex flex-wrap items-center gap-2 mb-3" data-order-id="service">
+              <button type="button" class="contact-toggle" data-platform="telegram" title="Telegram"><i data-lucide="send" class="w-4 h-4"></i></button>
+              <button type="button" class="contact-toggle" data-platform="x" title="X (Twitter)"><i data-lucide="twitter" class="w-4 h-4"></i></button>
+              <button type="button" class="contact-toggle" data-platform="discord" title="Discord">
+                <svg viewBox="0 0 24 24" class="w-4 h-4" fill="currentColor"><path d="M20.317 4.369A19.79 19.79 0 0 0 16.558 3c-.2.36-.42.84-.573 1.22a18.27 18.27 0 0 0-5.97 0A12.6 12.6 0 0 0 9.442 3a19.73 19.73 0 0 0-3.76 1.37C2.9 8.15 2.14 11.84 2.42 15.47a19.9 19.9 0 0 0 6.06 3.06c.49-.67.92-1.39 1.29-2.14-.71-.27-1.38-.6-2.02-1 .17-.13.33-.26.49-.4a14.2 14.2 0 0 0 12.09 0c.16.14.32.27.49.4-.64.4-1.31.73-2.02 1 .37.75.8 1.47 1.29 2.14a19.86 19.86 0 0 0 6.06-3.06c.34-4.2-.62-7.86-2.79-11.1zM9.5 13.3c-.85 0-1.55-.79-1.55-1.76 0-.97.68-1.76 1.55-1.76.87 0 1.57.8 1.55 1.76 0 .97-.68 1.76-1.55 1.76zm5 0c-.85 0-1.55-.79-1.55-1.76 0-.97.68-1.76 1.55-1.76.87 0 1.57.8 1.55 1.76 0 .97-.68 1.76-1.55 1.76z"/></svg>
+              </button>
+            </div>
+            <a href="#" target="_blank" rel="noopener" data-order-id="service" data-label-default="Обсудить проект"
+               class="order-btn btn-ghost rounded-xl py-3 text-center font-display font-medium text-white flex items-center justify-center gap-2">
+              <span class="order-btn-label">Обсудить проект</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+          </div>
         </div>
 
       </div>
@@ -583,6 +633,18 @@
             <i data-lucide="arrow-up-right" class="w-5 h-5 text-slate-500 group-hover:text-nova-cyan group-hover:translate-x-1 group-hover:-translate-y-1 transition-all"></i>
           </a>
 
+          <a href="https://discord.com/app" target="_blank" rel="noopener"
+             class="fade-up hover-lift card-border-glow glass rounded-3xl p-7 flex items-center gap-5 group">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-blue-500 flex items-center justify-center shrink-0 shadow-glow-violet">
+              <svg viewBox="0 0 24 24" class="w-6 h-6 text-white" fill="currentColor"><path d="M20.317 4.369A19.79 19.79 0 0 0 16.558 3c-.2.36-.42.84-.573 1.22a18.27 18.27 0 0 0-5.97 0A12.6 12.6 0 0 0 9.442 3a19.73 19.73 0 0 0-3.76 1.37C2.9 8.15 2.14 11.84 2.42 15.47a19.9 19.9 0 0 0 6.06 3.06c.49-.67.92-1.39 1.29-2.14-.71-.27-1.38-.6-2.02-1 .17-.13.33-.26.49-.4a14.2 14.2 0 0 0 12.09 0c.16.14.32.27.49.4-.64.4-1.31.73-2.02 1 .37.75.8 1.47 1.29 2.14a19.86 19.86 0 0 0 6.06-3.06c.34-4.2-.62-7.86-2.79-11.1zM9.5 13.3c-.85 0-1.55-.79-1.55-1.76 0-.97.68-1.76 1.55-1.76.87 0 1.57.8 1.55 1.76 0 .97-.68 1.76-1.55 1.76zm5 0c-.85 0-1.55-.79-1.55-1.76 0-.97.68-1.76 1.55-1.76.87 0 1.57.8 1.55 1.76 0 .97-.68 1.76-1.55 1.76z"/></svg>
+            </div>
+            <div class="flex-1">
+              <div class="text-xs mono-tag text-slate-500">DISCORD</div>
+              <div class="font-display font-semibold text-white text-lg">xavier_cross.</div>
+            </div>
+            <i data-lucide="arrow-up-right" class="w-5 h-5 text-slate-500 group-hover:text-nova-cyan group-hover:translate-x-1 group-hover:-translate-y-1 transition-all"></i>
+          </a>
+
           <div class="fade-up glass rounded-3xl p-7">
             <div class="flex items-center gap-2 text-sm text-slate-300">
               <i data-lucide="clock" class="w-4 h-4 text-nova-cyan"></i>
@@ -652,6 +714,9 @@
         </a>
         <a href="https://x.com/Xavier_Cross" target="_blank" rel="noopener" class="w-9 h-9 rounded-lg glass flex items-center justify-center text-slate-400 hover:text-nova-cyan transition-colors">
           <i data-lucide="twitter" class="w-4 h-4"></i>
+        </a>
+        <a href="https://discord.com/app" target="_blank" rel="noopener" class="w-9 h-9 rounded-lg glass flex items-center justify-center text-slate-400 hover:text-nova-cyan transition-colors">
+          <svg viewBox="0 0 24 24" class="w-4 h-4" fill="currentColor"><path d="M20.317 4.369A19.79 19.79 0 0 0 16.558 3c-.2.36-.42.84-.573 1.22a18.27 18.27 0 0 0-5.97 0A12.6 12.6 0 0 0 9.442 3a19.73 19.73 0 0 0-3.76 1.37C2.9 8.15 2.14 11.84 2.42 15.47a19.9 19.9 0 0 0 6.06 3.06c.49-.67.92-1.39 1.29-2.14-.71-.27-1.38-.6-2.02-1 .17-.13.33-.26.49-.4a14.2 14.2 0 0 0 12.09 0c.16.14.32.27.49.4-.64.4-1.31.73-2.02 1 .37.75.8 1.47 1.29 2.14a19.86 19.86 0 0 0 6.06-3.06c.34-4.2-.62-7.86-2.79-11.1zM9.5 13.3c-.85 0-1.55-.79-1.55-1.76 0-.97.68-1.76 1.55-1.76.87 0 1.57.8 1.55 1.76 0 .97-.68 1.76-1.55 1.76zm5 0c-.85 0-1.55-.79-1.55-1.76 0-.97.68-1.76 1.55-1.76.87 0 1.57.8 1.55 1.76 0 .97-.68 1.76-1.55 1.76z"/></svg>
         </a>
       </div>
     </div>
@@ -727,6 +792,45 @@
     });
   } catch (err) {
     console.warn('Contact form init failed:', err);
+  }
+
+  // Order buttons: switch target platform (Telegram / X / Discord) per pricing card
+  try {
+    const orderMessages = {
+      visitka: 'Здравствуйте! Хочу заказать сайт-визитку/лендинг',
+      shop: 'Здравствуйте! Хочу заказать интернет-магазин',
+      service: 'Здравствуйте! Хочу обсудить сложный веб-сервис'
+    };
+
+    document.querySelectorAll('.order-toggle-group').forEach(group => {
+      const orderId = group.dataset.orderId;
+      const link = document.querySelector(`.order-btn[data-order-id="${orderId}"]`);
+      if (!link) return;
+      const label = link.querySelector('.order-btn-label');
+      const defaultLabel = link.dataset.labelDefault || label.textContent;
+      const buttons = group.querySelectorAll('.contact-toggle');
+      const message = orderMessages[orderId] || '';
+
+      function activate(platform) {
+        buttons.forEach(b => b.classList.toggle('active-toggle', b.dataset.platform === platform));
+
+        if (platform === 'discord') {
+          link.href = 'https://discord.com/app';
+          label.textContent = 'Перейти в Discord';
+        } else if (platform === 'x') {
+          link.href = `https://x.com/intent/tweet?text=${encodeURIComponent('@Xavier_Cross ' + message)}`;
+          label.textContent = defaultLabel;
+        } else {
+          link.href = `https://t.me/xavierweb?text=${encodeURIComponent(message)}`;
+          label.textContent = defaultLabel;
+        }
+      }
+
+      buttons.forEach(b => b.addEventListener('click', () => activate(b.dataset.platform)));
+      activate('telegram');
+    });
+  } catch (err) {
+    console.warn('Order toggle init failed:', err);
   }
 
   // ===== Starfield canvas =====
