@@ -314,7 +314,7 @@
 
 <div class="content-layer">
 
-  <!-- ============ ШКАЛА НАКОПЛЕНИЙ (обычный блок, уезжает при скролле) ============ -->
+  <!-- ============ ШКАЛА НАКОПЛЕНИЙ (живой виджет DonationAlerts, обычный блок, уезжает при скролле) ============ -->
   <div class="px-5 sm:px-8 pt-4">
     <div class="mx-auto max-w-7xl">
       <div class="glass-strong rounded-2xl px-5 sm:px-7 py-3 shadow-lg shadow-black/40">
@@ -323,16 +323,16 @@
             <i data-lucide="target" class="w-3.5 h-3.5 text-nova-cyan"></i>
             <span class="text-xs sm:text-sm font-display text-slate-200 whitespace-nowrap">
               Коплю на цель — <span class="text-white font-semibold">200 000 ₽</span>
-              <span class="text-slate-400">(≈ $2 550)</span>
             </span>
           </div>
 
-          <div class="flex items-center gap-2.5 flex-1 min-w-0">
-            <span class="text-[11px] mono-tag text-slate-500 shrink-0">0 ₽ / $0</span>
-            <div class="relative h-2 flex-1 min-w-[60px] rounded-full bg-white/10 overflow-hidden">
-              <div class="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-nova-violet to-nova-cyan" style="width: 0%;"></div>
-            </div>
-            <span class="text-[11px] mono-tag text-slate-500 shrink-0 hidden xs:inline">200 000 ₽ / $2 550</span>
+          <div class="flex-1 min-w-0 rounded-xl overflow-hidden bg-black/20" style="min-height: 64px;">
+            <iframe
+              src="https://www.donationalerts.com/widget/goal/9788211?token=ljIDZAHJHTtvvWGoRsez"
+              title="Прогресс сбора DonationAlerts"
+              style="width: 100%; height: 64px; border: 0; display: block;"
+              loading="lazy">
+            </iframe>
           </div>
 
           <a href="https://www.donationalerts.com/r/vasqquez" target="_blank" rel="noopener"
